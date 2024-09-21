@@ -17,7 +17,7 @@ export default function ThemeProvider({ children }: any) {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <main className={` ${Montserrat.variable} flex items-center justify-center m-auto w-full max-w-screen-xl xs:px-10 2xl:px-0`}>
+            <main className={` ${Montserrat.variable} flex items-center justify-center m-auto w-full max-w-screen-xl px-4 sm:px-10 2xl:px-0`}>
                 {children}
             </main>
         </>

@@ -73,10 +73,10 @@ export default function Home() {
         </div>
 
         :
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 container">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 containers">
           {dataPokemon
             ? dataPokemon?.map((value: any, idx: number) => (
-              <div key={idx} onClick={() => router.push(`/pokemon/${value?.name}`)} className="square hover:cursor-pointer hover:scale-105 bg-white px-4 transition-all py-6 rounded-lg shadow-md shadow-divider space-y-3">
+              <div key={idx} onClick={() => router.push(`/pokemon/${value?.name}`)} className="square w-full hover:cursor-pointer hover:scale-105 bg-white px-4 transition-all py-6 rounded-lg shadow-md shadow-divider space-y-3">
                 <div className="flex justify-center">
                   <Image alt="pokemon" quality={100} src={value?.sprites?.front_default ?? "/images/notfound.png"} width={150} height={150} />
                 </div>
@@ -96,11 +96,11 @@ export default function Home() {
         </div>
       }
       {dataPokemon && !loading &&
-        <div className=" flex justify-end items-center gap-6">
-          <div className=" flex items-center gap-6">
-            <label className="font-medium text-font-tertiary">Rows per Page</label>
+        <div className=" flex max-sm:items-start justify-between sm:justify-end items-center gap-6">
+          <div className=" flex items-center max-sm:flex-col gap-4">
+            <label className="font-medium text-font-tertiary max-sm:text-sm">Rows per Page</label>
             <Select onValueChange={(value: string) => setLimit(Number(value))}>
-              <SelectTrigger className="w-20 border-opacity-40 shadow-md shadow-divider py-6 font-medium placeholder:font-medium">
+              <SelectTrigger className="w-20 border-opacity-40 shadow-md shadow-divider max-sm:py-3 py-6 font-medium placeholder:font-medium">
                 <SelectValue placeholder={limit} className="font-medium placeholder:font-medium" />
               </SelectTrigger>
               <SelectContent className="border-opacity-40 shadow-md shadow-divider">
@@ -114,10 +114,12 @@ export default function Home() {
               </SelectContent>
             </Select>
           </div>
-          <div className=" flex items-center gap-4">
-            <label className="font-medium text-font-tertiary">{offset + 1}-{Math.min(offset + limit, counts)} of {counts ?? 0}</label>
-            <Button className="shadow-md shadow-divider py-6" disabled={page === 1} onClick={handlePreviousPage}>Previous</Button>
-            <Button className="shadow-md shadow-divider py-6" disabled={page * limit >= counts} onClick={handleNextPage}>Next</Button>
+          <div className=" flex items-center max-sm:flex-col gap-4">
+            <label className="font-medium text-font-tertiary max-sm:text-sm">{offset + 1}-{Math.min(offset + limit, counts)} of {counts ?? 0}</label>
+            <div className="flex items-center gap-2">
+              <Button className="shadow-md shadow-divider max-sm:py-3 py-6" disabled={page === 1} onClick={handlePreviousPage}>Previous</Button>
+              <Button className="shadow-md shadow-divider max-sm:py-3 py-6" disabled={page * limit >= counts} onClick={handleNextPage}>Next</Button>
+            </div>
           </div>
         </div>
       }

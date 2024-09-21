@@ -12,13 +12,14 @@ export interface PokemonState {
 
 export interface PokemonData {
   listPokemon?: any;
+  detailPokemon?: any;
 }
 
 export interface IErrorType {
   code: number;
   message: string;
   data: null;
-  error:any;
+  error: any;
 }
 
 export interface PokemonResponse {

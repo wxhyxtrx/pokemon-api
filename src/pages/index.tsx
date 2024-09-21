@@ -1,31 +1,13 @@
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import EmptyState from "@/components/organizms/emptyState";
+import Header from "@/components/organizms/headers";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { colours } from "@/lib/utils";
 import { usePokemon } from "@/store/hooks/pokemon";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
-const colours: Record<string, string> = {
-  normal: "#A8A77A",
-  fire: "#EE8130",
-  water: "#6390F0",
-  electric: "#F7D02C",
-  grass: "#7AC74C",
-  ice: "#96D9D6",
-  fighting: "#C22E28",
-  poison: "#A33EA1",
-  ground: "#E2BF65",
-  flying: "#A98FF3",
-  psychic: "#F95587",
-  bug: "#A6B91A",
-  rock: "#B6A136",
-  ghost: "#735797",
-  dragon: "#6F35FC",
-  dark: "#705746",
-  steel: "#B7B7CE",
-  fairy: "#D685AD",
-};
+import { DNA } from "react-loader-spinner";
 
 export default function Home() {
   const { listPokemon } = usePokemon();
@@ -36,6 +18,8 @@ export default function Home() {
   const [limit, setLimit] = useState(12)
   const [offset, setOffset] = useState(0)
   const [page, setPage] = useState(1)
+
+  const router = useRouter()
 
   const GetListPokemon = async () => {
     try {
@@ -64,7 +48,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    setOffset((page - 1) * limit); // calculate offset based on current page
+    setOffset((page - 1) * limit);
   }, [page, limit]);
 
   useEffect(() => {
@@ -73,56 +57,45 @@ export default function Home() {
 
   return (
     <div className="w-full py-10 flex flex-col gap-10">
-      <div className="flex items-center gap-5">
-        <div className="flex flex-1 items-center gap-3 bg-white shadow-lg  shadow-divider px-6 py-4 rounded-lg">
-          <Image alt="logo" quality={100} width={50} height={50} src={"/images/logo.png"} />
-          <Input placeholder="Search your pokémon" onChange={(e) => setSearch(e.target.value)} className="border-0 bg-transparent text-font-primary text-lg placeholder:text-font-disabled" />
-          <button onClick={GetListPokemon} className="bg-[#ff5350] shadow-lg shadow-[#ff5350] drop-shadow-2xl p-3 rounded-lg">
-            <Image alt="deks" src={"/images/icons/dek.png"} quality={100} width={24} height={24} />
-          </button>
+      <Header onSearch={setSearch} onRefresh={GetListPokemon} />
+      {loading
+        ?
+        <div className="flex flex-col justify-center items-center min-h-80 w-full">
+          <DNA
+            visible
+            height="120"
+            width="200"
+            ariaLabel="dna-loading"
+            wrapperStyle={{}}
+            wrapperClass="dna-wrapper"
+          />
+          <label>Please wait....</label>
         </div>
-        <div className="flex items-center gap-4 bg-white shadow-lg  shadow-divider px-4 py-2 rounded-lg">
-          <button onClick={GetListPokemon} className="drop-shadow-2xl p-3 rounded-lg">
-            <Image alt="deks" src={"/images/bag.png"} quality={100} width={40} height={40} />
-          </button>
-        </div>
-        <div className="flex items-center gap-4 bg-white shadow-lg  shadow-divider px-4 py-2 rounded-lg">
-          <button onClick={GetListPokemon} className="drop-shadow-2xl p-3 rounded-lg">
-            <Avatar className="bg-font-primary">
-              <AvatarImage src="/images/icons/user.png" alt="Pokemon" />
-            </Avatar>
-          </button>
-        </div>
-      </div>
 
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-        {dataPokemon
-          ? dataPokemon?.map((value: any, idx: number) => (
-            <div key={idx} className=" bg-white px-4 py-6 rounded-lg shadow-md shadow-divider space-y-3">
-              <div className="flex justify-center">
-                <Image alt="pokemon" quality={100} src={value?.sprites?.front_default ?? "/images/notfound.png"} width={150} height={150} />
-              </div>
-              <div className="text-center space-y-3">
-                <div className="font-bold text-font-disabled text-base">{value?.weight} kg</div>
-                <label className="font-bold text-font-tertiary text-2xl capitalize">{value?.name}</label>
-                <div className="flex items-center gap-2 justify-center ">
-                  {value?.types?.map((item: any, idx: number) => (
-                    <p key={idx} style={{ backgroundColor: colours[item.type.name] }} className={`leading-none text-sm capitalize px-4 py-2 rounded-lg text-white`}>{item.type.name}</p>
-                  ))}
+        :
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 container">
+          {dataPokemon
+            ? dataPokemon?.map((value: any, idx: number) => (
+              <div key={idx} onClick={() => router.push(`/pokemon/${value?.name}`)} className="square hover:cursor-pointer hover:scale-105 bg-white px-4 transition-all py-6 rounded-lg shadow-md shadow-divider space-y-3">
+                <div className="flex justify-center">
+                  <Image alt="pokemon" quality={100} src={value?.sprites?.front_default ?? "/images/notfound.png"} width={150} height={150} />
+                </div>
+                <div className="text-center space-y-3">
+                  <div className="font-bold text-font-disabled text-base">{value?.weight} kg</div>
+                  <label className="font-bold text-font-tertiary text-2xl capitalize">{value?.name}</label>
+                  <div className="flex items-center gap-2 justify-center ">
+                    {value?.types?.map((item: any, idx: number) => (
+                      <p key={idx} style={{ backgroundColor: colours[item.type.name] }} className={`leading-none text-sm capitalize px-4 py-2 rounded-lg text-white`}>{item.type.name}</p>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-          : <div className=" col-span-6 w-full bg-white px-4 py-20 rounded-lg shadow-lg shadow-divider">
-            <div className="w-full flex flex-col items-center justify-center">
-              <label className=" font-bold text-4xl text-font-secondary">Oops, I am Sorry</label>
-              <Image quality={40} alt="empty" layout="responsive" width={0} height={0} className=" max-w-52" src={"/images/icons/empty.png"} />
-              <p className="font-medium max-w-80 text-center text-font-disabled">I don't see your pokemon here, try to write its name correctly.</p>
-            </div>
-          </div>
-        }
-      </div>
-      {dataPokemon &&
+            ))
+            : <EmptyState />
+          }
+        </div>
+      }
+      {dataPokemon && !loading &&
         <div className=" flex justify-end items-center gap-6">
           <div className=" flex items-center gap-6">
             <label className="font-medium text-font-tertiary">Rows per Page</label>

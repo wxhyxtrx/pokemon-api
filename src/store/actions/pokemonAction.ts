@@ -54,14 +54,41 @@ export const getListPokemon =
       };
       dispatch(pokemonSuccess({ listPokemon: response }));
       return response;
-    } catch (error:any) {
+    } catch (error: any) {
       const response = {
         code: error.status ?? 404,
         data: null,
         error: error.response.data,
         message: error.message ?? "failed",
       };
-      console.log("AXIOS ERROR",error)
+      dispatch(pokemonError(response));
+      return response;
+    }
+  };
+
+export const getDetailPokemon =
+  (name: string | string[] | undefined) => async (dispatch: Dispatch<PokemonAction>) => {
+    dispatch(pokemonPending());
+
+    const url = `/pokemon/${name}`;
+
+    try {
+      const result = await API.get(url);
+      const { status, data } = result;
+      const response = {
+        code: status,
+        data: data,
+        message: "success get detail",
+      };
+      dispatch(pokemonSuccess({ detailPokemon: response }));
+      return response;
+    } catch (error: any) {
+      const response = {
+        code: error.status ?? 404,
+        data: null,
+        error: error.response.data,
+        message: error.message ?? "failed get detail",
+      };
       dispatch(pokemonError(response));
       return response;
     }

@@ -73,10 +73,10 @@ export default function Home() {
         </div>
 
         :
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 containers">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 sm:containers">
           {dataPokemon
             ? dataPokemon?.map((value: any, idx: number) => (
-              <div key={idx} onClick={() => router.push(`/pokemon/${value?.name}`)} className="square w-full hover:cursor-pointer hover:scale-105 bg-white px-4 transition-all py-6 rounded-lg shadow-md shadow-divider space-y-3">
+              <div key={idx} onClick={() => router.push(`/pokemon/${value?.name}`)} className="sm:square w-full hover:cursor-pointer hover:scale-105 bg-white px-4 transition-all py-6 rounded-lg shadow-md shadow-divider space-y-3">
                 <div className="flex justify-center">
                   <Image alt="pokemon" quality={100} src={value?.sprites?.front_default ?? "/images/notfound.png"} width={150} height={150} />
                 </div>

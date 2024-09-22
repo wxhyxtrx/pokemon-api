@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../types";
-import { getDetailPokemon, getListPokemon } from "../actions/pokemonAction";
+import { delPokemon, getDetailPokemon, getListPokemon, myPokemons } from "../actions/pokemonAction";
+import { retry } from "@reduxjs/toolkit/query";
 
 export const usePokemon = () => {
   const dispatch = useDispatch<any>();
@@ -16,9 +17,21 @@ export const usePokemon = () => {
     return pokemon;
   };
 
+  const addPokemon = async (name: string, pokemon: string, image: string) => {
+    const hero = await dispatch(myPokemons(name, pokemon, image));
+    return hero;
+  };
+
+  const deletePokemon = async (name: string) => {
+    const pokemon = await dispatch(delPokemon(name));
+    return pokemon;
+  };
+
   return {
     managementPokemonState,
     listPokemon,
     detailPokemon,
+    addPokemon,
+    deletePokemon,
   };
 };

@@ -1,5 +1,6 @@
 import { Dispatch } from "redux";
 import {
+  IBagPokemons,
   IErrorType,
   IListPokemon,
   PokemonAction,
@@ -8,6 +9,9 @@ import {
 } from "../types/pokemonType";
 import { API } from "@/config/API";
 import axios from "axios";
+import { usePokemon } from "../hooks/pokemon";
+import { RootState } from "../types";
+import { error } from "console";
 
 export const pokemonPending = (): PokemonAction => ({
   type: PokemonType.POKEMON_PENDING,
@@ -16,9 +20,9 @@ export const pokemonPending = (): PokemonAction => ({
   },
 });
 
-export const pokemonSuccess = (data: PokemonData): PokemonAction => ({
+export const pokemonSuccess = (data: Partial<PokemonData>): PokemonAction => ({
   type: PokemonType.POKEMON_SUCCESS,
-  payload: { data },
+  payload: { ...data },
 });
 
 export const pokemonError = (error: IErrorType): PokemonAction => ({
@@ -52,7 +56,7 @@ export const getListPokemon =
         },
         message: "success",
       };
-      dispatch(pokemonSuccess({ listPokemon: response }));
+      dispatch(pokemonSuccess({ listPokemon: name ? [data] : pokemonData }));
       return response;
     } catch (error: any) {
       const response = {
@@ -80,7 +84,7 @@ export const getDetailPokemon =
         data: data,
         message: "success get detail",
       };
-      dispatch(pokemonSuccess({ detailPokemon: response }));
+      dispatch(pokemonSuccess({ detailPokemon: data }));
       return response;
     } catch (error: any) {
       const response = {
@@ -89,6 +93,79 @@ export const getDetailPokemon =
         error: error.response.data,
         message: error.message ?? "failed get detail",
       };
+      dispatch(pokemonError(response));
+      return response;
+    }
+  };
+
+export const myPokemons =
+  (name: string, pokemon: string, image: string) =>
+  async (dispatch: Dispatch<PokemonAction>, getState: () => RootState) => {
+    dispatch(pokemonPending());
+
+    const {
+      pokemon: { myPokemons },
+    } = getState();
+
+    const isPokemonExist = myPokemons?.some((item: IBagPokemons) => item.pokemon === pokemon);
+
+    if (isPokemonExist) {
+      const response = {
+        code: 400,
+        data: null,
+        message: "Pokémon already exists in your collection!",
+        error: true,
+      };
+      dispatch(pokemonError(response));
+      return response;
+    }
+
+    const data: IBagPokemons = {
+      name,
+      pokemon,
+      image,
+    };
+
+    const updatedPokemons = [...(myPokemons ?? []), data]; 
+
+    dispatch(pokemonSuccess({ myPokemons: updatedPokemons }));
+
+    const response = {
+      code: 200,
+      data: data,
+      message: "Pokémon added successfully",
+    };
+    return response;
+  };
+
+export const delPokemon =
+  (name: string) => async (dispatch: Dispatch<PokemonAction>, getState: () => RootState) => {
+    dispatch(pokemonPending());
+
+    try {
+      const {
+        pokemon: { myPokemons },
+      } = getState();
+
+      const updatedPokemons = myPokemons?.filter(
+        (pokemon: IBagPokemons) => pokemon.pokemon !== name
+      );
+
+      dispatch(pokemonSuccess({ myPokemons: updatedPokemons }));
+
+      return {
+        code: 200,
+        data: updatedPokemons,
+        message: "Pokémon deleted successfully",
+      };
+    } catch (error: any) {
+      const response = {
+        code: error.status ?? 500,
+        data: null,
+        message: "Failed to delete Pokémon",
+        error: error.response.data,
+      };
+
       dispatch(pokemonError(response));
       return response;
     }

@@ -1,6 +1,7 @@
 import React from 'react'
 import localFont from "next/font/local";
 import Head from 'next/head';
+import { Toaster } from '../ui/toaster';
 
 const Montserrat = localFont({
     src: "../../pages/fonts/Montserrat-Regular.woff",
@@ -17,6 +18,7 @@ export default function ThemeProvider({ children }: any) {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+            <Toaster />
             <main className={` ${Montserrat.variable} flex items-center justify-center m-auto w-full max-w-screen-xl px-4 sm:px-10 2xl:px-0`}>
                 {children}
             </main>

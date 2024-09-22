@@ -11,8 +11,15 @@ export interface PokemonState {
 }
 
 export interface PokemonData {
-  listPokemon?: any;
+  listPokemon?: IListPokemon[];
   detailPokemon?: any;
+  myPokemons?: IBagPokemons[];
+}
+
+export interface IBagPokemons {
+  name: string;
+  image: string;
+  pokemon: string;
 }
 
 export interface IErrorType {
@@ -36,7 +43,9 @@ export interface IListPokemon {
 interface GetPokemonAction {
   type: PokemonType.POKEMON_SUCCESS;
   payload: {
-    data: PokemonData;
+    listPokemon?: IListPokemon[]; // Optional payload untuk list Pokemon
+    detailPokemon?: any; // Optional payload untuk detail Pokemon
+    myPokemons?: IBagPokemons[]; // Optional payload untuk user's Pokemons
   };
 }
 
@@ -51,5 +60,4 @@ interface SetErrorAction {
     error: IErrorType;
   };
 }
-
 export type PokemonAction = GetPokemonAction | SetLoadingAction | SetErrorAction;

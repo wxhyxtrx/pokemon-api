@@ -4,8 +4,10 @@ import EmptyState from '@/components/organizms/emptyState'
 import Header from '@/components/organizms/headers'
 import { Button } from '@/components/ui/button'
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
+import { useToast } from '@/hooks/use-toast'
 import { colours } from '@/lib/utils'
 import { usePokemon } from '@/store/hooks/pokemon'
+import { IBagPokemons } from '@/store/types/pokemonType'
 import { Lock } from '@phosphor-icons/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -14,8 +16,10 @@ import { DNA } from 'react-loader-spinner'
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from 'recharts'
 
 export default function index() {
-    const { query, push } = useRouter()
-    const { detailPokemon } = usePokemon()
+    const { query } = useRouter()
+    const { detailPokemon, addPokemon, managementPokemonState } = usePokemon()
+    const { toast } = useToast()
+    const { myPokemons } = managementPokemonState
 
     const pokemonName = query.name
     const [data, setData] = useState<any>(null)
@@ -39,13 +43,31 @@ export default function index() {
         try {
             const result = await detailPokemon(pokemonName)
             setData(result.data)
-            console.log(result.data)
         } catch (error) {
             setData(null)
         } finally {
             setTimeout(() => {
                 setLoading(false)
             }, 1000)
+        }
+    }
+
+    const handleAddPokemon = async () => {
+        const { name, sprites } = data
+        const isPokemonExist = myPokemons?.find((pokemon: IBagPokemons) => pokemon.pokemon === name);
+        console.log(myPokemons)
+        if (!isPokemonExist) {
+            await addPokemon("Pokemon", name, sprites?.front_default ?? "/images/notfound.png");
+            toast({
+                title: "Success Get Pokemon",
+                description: `Pokemon : ${name}`,
+            })
+        } else {
+            toast({
+                title: "Failed Get Pokemon",
+                description: `Pokemon already exists in your bag!`,
+                variant: "destructive"
+            })
         }
     }
 
@@ -132,9 +154,9 @@ export default function index() {
                             </div>
                         </div>
                         <div className='col-span-4 sm:px-10 flex justify-center max-sm:fixed max-sm:bottom-0 left-0 w-full'>
-                            <Button className='flex items-center justify-between gap-5 w-full sm:max-w-screen-sm py-6 font-bold text-xl bg-red-600 hover:bg-red-600/80 text-white max-sm:rounded-none'>
+                            <Button onClick={()=>handleAddPokemon()} className='flex items-center justify-between gap-5 w-full sm:max-w-screen-sm py-6 font-bold text-xl bg-red-700 hover:bg-red-600 text-white max-sm:rounded-none'>
                                 <span className='w-full text-end'>Getting</span>
-                                <Image alt='btnBall' src={"/images/icons/ball.png"} quality={100} width={80} height={80} />
+                                <Image alt='btnBall' src={"/images/icons/ball.png"} quality={100} width={80} height={80} className='max-sm:-translate-y-5' />
                                 <span className='w-full text-start'>Pokemon</span>
                             </Button>
                         </div>

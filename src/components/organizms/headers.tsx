@@ -4,6 +4,11 @@ import { Avatar, AvatarImage } from '../ui/avatar'
 import { Input } from '../ui/input'
 import { CaretLeft } from '@phosphor-icons/react'
 import { useRouter } from 'next/router'
+import { usePokemon } from '@/store/hooks/pokemon'
+import { RootState } from '@/store/types'
+import { useSelector } from 'react-redux'
+import ModalBag from './Modals/modalBag'
+import { useState } from 'react'
 
 interface IHeaders {
     onSearch: (search: string) => void,
@@ -12,9 +17,13 @@ interface IHeaders {
 }
 
 export default function Header({ onSearch, onRefresh, title }: IHeaders) {
+    const { managementPokemonState } = usePokemon()
     const pathname = usePathname()
     const router = useRouter()
     const otherPage = pathname?.includes('/pokemon/')
+    const myPokemons = managementPokemonState.myPokemons;
+
+    const [openBag, setOpenBag] = useState(false)
     return (
         <div className="flex max-sm:flex-col-reverse items-center gap-5">
             {otherPage && pathname !== "/"
@@ -36,11 +45,22 @@ export default function Header({ onSearch, onRefresh, title }: IHeaders) {
                     </div>
                 )}
             <div className='flex items-center max-sm:justify-between max-sm:w-full gap-4'>
-                <div className="flex items-center gap-4 bg-white shadow-lg  shadow-divider px-4 py-2 rounded-lg">
-                    <button className="drop-shadow-2xl p-3 rounded-lg">
-                        <Image alt="deks" src={"/images/bag.png"} quality={100} width={40} height={40} />
-                    </button>
-                </div>
+                <ModalBag
+                    open={openBag}
+                    onClose={setOpenBag}
+                    buttonTrigger={
+                        <div className="relative flex items-center gap-4 bg-white shadow-lg  shadow-divider px-4 py-2 rounded-lg">
+                            <button className="drop-shadow-2xl p-3 rounded-lg">
+                                <Image alt="deks" src={"/images/bag.png"} quality={100} width={40} height={40} className='scale-125' />
+                            </button>
+                            {myPokemons?.length !== 0 &&
+                                <div className='absolute -top-0 right-0 p-1.5 text-xs flex items-center justify-center h-7 w-8 rounded-full bg-red-600 text-white'>
+                                    {myPokemons?.length}
+                                </div>
+                            }
+                        </div>
+                    }
+                />
                 <div className="flex items-center gap-4 bg-white shadow-lg  shadow-divider px-4 py-2 rounded-lg">
                     <button className="drop-shadow-2xl p-3 rounded-lg">
                         <Avatar className="bg-font-tertiary p-1">

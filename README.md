@@ -61,6 +61,7 @@ To get started with the project, follow these steps:
 ![Reference](https://cdn.dribbble.com/users/1639927/screenshots/15128634/media/7ff8ed6811ef601888f737c84af2e7a7.gif)
 
 ## Preview
-![Pokémon Preview](public/images/1.png)
-![Pokémon Preview](public/images/2.png)
-![Pokémon Preview](public/images/3.png)
+
+![Pokémon Preview](/public/preview/1.png)
+![Pokémon Preview](/public/preview/2.png)
+![Pokémon Preview](/public/preview/3.png)

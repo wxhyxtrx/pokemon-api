@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.containers:has(> :hover) {
+  .square:not(:hover) {
+    opacity: 0.3;
+  }
+}

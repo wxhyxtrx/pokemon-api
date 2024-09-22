@@ -42,13 +42,18 @@ export default function index() {
     const getDetails = async () => {
         try {
             const result = await detailPokemon(pokemonName)
-            setData(result.data)
+            if (result.code === 200) {
+                setData(result.data)
+                setTimeout(() => {
+                    setLoading(false)
+                }, 1000)
+            } else {
+                setData(null)
+                setLoading(false)
+            }
         } catch (error) {
             setData(null)
-        } finally {
-            setTimeout(() => {
-                setLoading(false)
-            }, 1000)
+            setLoading(false)
         }
     }
 
@@ -154,7 +159,7 @@ export default function index() {
                             </div>
                         </div>
                         <div className='col-span-4 md:px-10 flex justify-center max-md:fixed max-md:bottom-0 left-0 w-full'>
-                            <Button onClick={()=>handleAddPokemon()} className='flex items-center justify-between gap-5 w-full md:max-w-screen-sm py-6 font-bold text-xl bg-red-700 hover:bg-red-600 text-white max-md:rounded-none'>
+                            <Button onClick={() => handleAddPokemon()} className='flex items-center justify-between gap-5 w-full md:max-w-screen-sm py-6 font-bold text-xl bg-red-700 hover:bg-red-600 text-white max-md:rounded-none'>
                                 <span className='w-full text-end'>Getting</span>
                                 <Image alt='btnBall' src={"/images/icons/ball.png"} quality={100} width={80} height={80} className='max-md:-translate-y-5' />
                                 <span className='w-full text-start'>Pokemon</span>

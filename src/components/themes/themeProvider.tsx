@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { Toaster } from '../ui/toaster';
 
 const Montserrat = localFont({
-    src: "../../pages/fonts/Montserrat-Regular.woff",
+    src: "../../pages/fonts/MontserratRegular.woff",
     variable: "--font-geist-sans",
     weight: "100 900",
 });

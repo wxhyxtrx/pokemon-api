@@ -95,7 +95,7 @@ export default function index() {
                 : data && !loading
                     ?
                     <>
-                        <div className='w-full bg-white shadow-lg grid sm:grid-cols-2 md:grid-cols-4 shadow-divider rounded-lg divide-y-4 divide-x-4 divide-background py-4'>
+                        <div className='w-full bg-white shadow-lg grid sm:grid-cols-2 lg:grid-cols-4 shadow-divider rounded-lg max-sm:divide-y-4 sm:divide-x-4 divide-background py-4'>
                             <div className='w-full flex justify-center'>
                                 <Image alt="pokemon" quality={100} src={data?.sprites?.front_default ?? "/images/notfound.png"} width={250} height={250} />
                             </div>
@@ -153,10 +153,10 @@ export default function index() {
                                 </div>
                             </div>
                         </div>
-                        <div className='col-span-4 sm:px-10 flex justify-center max-sm:fixed max-sm:bottom-0 left-0 w-full'>
-                            <Button onClick={()=>handleAddPokemon()} className='flex items-center justify-between gap-5 w-full sm:max-w-screen-sm py-6 font-bold text-xl bg-red-700 hover:bg-red-600 text-white max-sm:rounded-none'>
+                        <div className='col-span-4 md:px-10 flex justify-center max-md:fixed max-md:bottom-0 left-0 w-full'>
+                            <Button onClick={()=>handleAddPokemon()} className='flex items-center justify-between gap-5 w-full md:max-w-screen-sm py-6 font-bold text-xl bg-red-700 hover:bg-red-600 text-white max-md:rounded-none'>
                                 <span className='w-full text-end'>Getting</span>
-                                <Image alt='btnBall' src={"/images/icons/ball.png"} quality={100} width={80} height={80} className='max-sm:-translate-y-5' />
+                                <Image alt='btnBall' src={"/images/icons/ball.png"} quality={100} width={80} height={80} className='max-md:-translate-y-5' />
                                 <span className='w-full text-start'>Pokemon</span>
                             </Button>
                         </div>

@@ -1,0 +1,21 @@
+{
+  "name": "Pokémon Web App",
+  "short_name": "Pokédex",
+  "description": "A modern and dynamic Pokémon web app built with Next.js and powered by PokéAPI. Browse, search, and manage your favorite Pokémon with ease.",
+  "icons": [
+    {
+      "src": "/images/icons/ball.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#ffcb05",
+  "background_color": "#3b4cca"
+}
